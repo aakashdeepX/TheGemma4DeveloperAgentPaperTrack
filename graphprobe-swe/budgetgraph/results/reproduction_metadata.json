@@ -1,0 +1,11 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "numpy": "2.3.5",
+  "notebook_sha256": "7e83e265aa5abffb73bbc442bb94a2fbbdf6d4efd13f68448a90a87560f17cda",
+  "payload_sha256": "b3776bdfec1256911d1e329749095587eed5e36c4041fe88267d1bf6f6bc7bc0",
+  "elapsed_seconds": 85.79836444099999,
+  "verification_scope": "Frozen-input reproduction; no independent source reconstruction or model repair run.",
+  "aggregate_checks": 20,
+  "correctness_tests": 6
+}

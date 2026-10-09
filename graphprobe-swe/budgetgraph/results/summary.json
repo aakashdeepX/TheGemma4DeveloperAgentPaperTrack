@@ -1,0 +1,110 @@
+{
+  "scope": "Recovery summary of independently recomputed frozen-input results; full paired condition/seed outcomes are in per_task.jsonl.gz.",
+  "audit": {
+    "n_tasks": 143,
+    "n_eligible": 143,
+    "n_repositories": 12,
+    "gold_count": 143,
+    "covered_gold": 143,
+    "missing_gold": {},
+    "excluded_tasks": [],
+    "parse_failures": 15,
+    "total_file_instances": 49893,
+    "total_edges": 232084,
+    "files_min": 21,
+    "files_max": 862,
+    "files_median": 251,
+    "repo_counts": {
+      "astropy/astropy": 6,
+      "django/django": 20,
+      "matplotlib/matplotlib": 20,
+      "mwaskom/seaborn": 4,
+      "pallets/flask": 3,
+      "psf/requests": 6,
+      "pydata/xarray": 5,
+      "pylint-dev/pylint": 6,
+      "pytest-dev/pytest": 17,
+      "scikit-learn/scikit-learn": 20,
+      "sphinx-doc/sphinx": 16,
+      "sympy/sympy": 20
+    }
+  },
+  "results": [
+    {
+      "condition": "clean",
+      "method": "bm25",
+      "macro_hit5": 0.6761437908496734,
+      "delta_ci95": [
+        0,
+        0
+      ],
+      "harmed_tasks_hit5": 0,
+      "improved_tasks_hit5": 0
+    },
+    {
+      "condition": "clean",
+      "method": "fusion",
+      "macro_hit5": 0.6024509803921568,
+      "macro_delta_hit5": -0.07369281045751634,
+      "delta_ci95": [
+        -0.1224673202614379,
+        -0.03127450980392166
+      ],
+      "harmed_tasks_hit5": 12,
+      "improved_tasks_hit5": 0
+    },
+    {
+      "condition": "clean",
+      "method": "guard2",
+      "macro_hit5": 0.6115196078431372,
+      "delta_ci95": [
+        -0.11120915032679737,
+        -0.021568627450980392
+      ],
+      "harmed_tasks_hit5": 10,
+      "improved_tasks_hit5": 0
+    },
+    {
+      "condition": "clean",
+      "method": "ppr",
+      "macro_hit5": 0.16184640522875818,
+      "delta_ci95": [
+        -0.603374183006536,
+        -0.42236111111111113
+      ],
+      "harmed_tasks_hit5": 76,
+      "improved_tasks_hit5": 2
+    },
+    {
+      "condition": "add100",
+      "method": "fusion",
+      "macro_hit5": 0.6164705882352942
+    },
+    {
+      "condition": "drop50",
+      "method": "fusion",
+      "macro_hit5": 0.6166176470588235
+    },
+    {
+      "condition": "empty",
+      "method": "fusion",
+      "macro_hit5": 0.6761437908496734
+    },
+    {
+      "condition": "rewire",
+      "method": "fusion",
+      "macro_hit5": 0.5957843137254901
+    }
+  ],
+  "posthoc_diagnostics": {
+    "analysis_status": "Descriptive, defined after the primary outcome; not causally established.",
+    "tasks_with_changed_top5": 120,
+    "median_task_mean_degree_promoted": 94.5,
+    "median_task_mean_degree_removed": 10,
+    "topology_dividend_macro_hit5": 0.006666666666666667,
+    "topology_dividend_ci95": [
+      0,
+      0.01666666666666667
+    ]
+  }
+}

@@ -1,41 +1,57 @@
-# Research execution plan (GraphProbe-SWE)
+# GraphProbe-SWE evaluation plan — v0.2
 
-## Checkpoints
+Updated October 9, 2026. Audit outcomes are known; the intervention is prospective.
 
-1. **First demo (complete):** deterministic Python source + toy fixture + smoke test. No model and no public-data results.
-2. **Public development benchmark:** mount organizers' data on Kaggle; test all 129 tasks; record missing graphs and unresolvable issues; save per-task JSONL.
-3. **Gold-label integrity:** extract AST spans from source snapshot and overlap exact reference patch hunks. Create a module-to-file map independently of the patch to avoid optimistic prefix matches.
-4. **Fair baseline comparison:** exact tokenizer match, equal inspected tokens, add native embedding search and BM25, same candidate universe, reproducible seed and edge perturbation.
-5. **Ablations:** lexical only; fixed graph; graph with trust gate; adaptive with/without redundancy/cost; edge-drop 10/25/50%; graph injection and missing symbols.
-6. **Gemma 4 integration:** official model and harness tools only; run identical agent configuration and deterministic seeds if possible; patch validation via tests.
-7. **Paper revision:** publish per-task data, clustered confidence intervals, failures, limitations, and explicit measured hardware and runtime. Do not claim best-paper readiness until this exists.
+## Completed evidence
 
-## Data-leakage guardrail
+- BudgetGraph frozen-input audit: 143 SWE-bench Lite tasks, 12 repositories.
+- Primary macro repository Hit@5: BM25 0.6761437908496734; clean fusion 0.6024509803921568.
+- Paired difference −0.07369281045751634; within-repository task-bootstrap 95% interval [−0.1224673202614379, −0.03127450980392166].
+- Offline reconstruction of rankings and metrics passes all 20 expected aggregate comparisons and six correctness tests.
+- Post hoc diagnostics and paired task outcomes are released in budgetgraph/results.
+- This reproduces frozen retrieval features, not original source indexing, and does not evaluate repair.
 
-Only issue text and pre-fix repo state are available to candidate selection. `patch` and `test_patch` are used to form labels and post hoc evaluation only; do not concatenate them into prompts, index their content, or use labels from held-out repositories during tuning.
+## Next checkpoints
 
-## High-value hypotheses
+1. Independently rebuild all audit indexes from original SWE-bench issues and exact base commits. Compare query/corpus hashes, paths, BM25 arrays, edges, parse failures, and gold coverage. Report all failures; do not silently omit them.
+2. Freeze an untouched confirmation set. The 143 audit tasks have informed the proposal; evaluations on these tasks remain exploratory. Use repository-disjoint confirmation where possible, group repeated commits, and deduplicate against competition tasks.
+3. Correct the legacy GraphProbe module-prefix proxy before quantitative competition claims. Build source-based file maps and align patch hunks to AST spans at the base commit. Keep unavailable/added files in denominators; report unresolved symbols separately rather than quietly dropping difficult tasks.
+4. Implement the proposed counterfactual gate using only pre-fix query/index features. The original graphprobe.py is a heuristic, not this gate.
+5. Conduct exact-token localization comparisons, followed by a separate controlled Gemma repair study.
 
-- H1: Under matched budgets, adaptive retrieval has higher gold-symbol Recall@Budget than the lexical baseline.
-- H2: As structural edges are removed, stability gating reduces degradation versus fixed graph fusion.
-- H3: An offline Gemma 4 coding agent with adaptive retrieval improves issue resolution per second or per token.
+## Prospective protocol to freeze before running
 
-Null hypotheses are equally important; report if H1–H3 fail.
+- Primary localization endpoint: macro file Recall@2,048 exact tokens.
+- Secondary budgets: 512, 1,024, and 4,096 tokens; Hit@k, reciprocal rank, harm/recovery counts, coverage, latency, tool calls, memory.
+- Comparators: BM25; original audit fixed fusion/protected fusion; degree-normalized expansion; query-supported one-hop expansion; compatible semantic retrieval; legacy GraphProbe; proposed counterfactual gate.
+- Use the same candidate universe, source snapshots, source snippets, tokenizer, and context assembly for every method.
+- Separate outer repository evaluation folds from inner training/calibration folds. No threshold, cost weight, scaler, or model can be fit on the outer fold.
+- Group issues sharing base commits within splits. Hash and publish manifests and settings before accessing held-out outcomes.
+- Select one primary gate configuration inside training folds. Treat graph conditions, alternate budgets, and ablations as secondary; report all results.
+- Paired uncertainty must respect commit grouping; report repository-specific estimates and explain what population each interval covers. A small repository count limits repository-level inference.
 
-## Suggested experiments: preregister settings
+## Gate inputs and targets
 
-- k: 5, 10, 20 symbols
-- Context budgets: 512, 1024, 2048, 4096 exact Gemma tokens
-- Edge-corruption rates: 0, 0.10, 0.25, 0.50
-- Seeds: 13, 17, 23, 29, 41
-- Holdouts: leave-one-repository-out, group repeated snapshots by base_commit
-- Scoring: paired bootstrap (with cluster structure where practical), overall and per-repository point estimates
-- Reporting: all failures, data exclusions, compute/memory costs, hyperparameters, tool calls and model settings
+Permitted inputs: issue text, pre-fix identifiers, lexical margins, top-k displacement, degree concentration, edge-type features, graph-perturbation sensitivity, candidate support relative to rewired controls, exact context cost, and compatible independent semantic/query evidence.
 
-## Potential Chinese open-source methodology inspiration
+Training-fold targets may use patch-derived localization outcomes. Held-out patch/test labels may be used only by evaluation. They must never be retrieval features, choose the graph action for that issue, or enter the agent prompt.
 
-DeepSeekMath/DeepSeek-R1 uses group-relative optimization; for a future approach, treat evidence selection as a policy and construct verifiable rewards from fault localization, test success, and cost. This is only a possible extension once strong non-RL baselines exist. Cite methods and abide by model, license, and Kaggle restrictions. Do not substitute unapproved foundation models for the companion main-track agent, where the specific Gemma 4 variant is mandated.
+Stability is not calibrated correctness. A hub may be stably irrelevant. The gate should abstain unless independent support and training-fold calibration justify lexical displacement. Its decision record is an audit trail, not a patch correctness certificate.
 
-## Final deadline
+## Ablations
 
-Paper Track: November 12, 2026 23:59 UTC (November 13, 2026 05:29 IST). After writing the draft in Kaggle, click its actual **Submit** action. A draft writeup alone is not an entry.
+Remove counterfactual topology evidence, independent query support, hub penalties, and abstention independently. Compare edge deletion, injection, rewiring, and empty controls. Measure both recovered misses and lost lexical successes. Track gate coverage and harm as a function of threshold; do not report only its most favorable operating point.
+
+## Gemma repair study (not yet executed)
+
+Keep checkpoint, prompt, tool definitions, token/runtime budgets, trial count, seeds, and test environment identical. Vary retrieval only. Score patches with the official or separately frozen public harness. Report resolved tasks, failures, latency, memory, inspected tokens, and costs for failed runs too. Never provide reference fixes or held-out tests to the agent during inference.
+
+SWE-bench audit results and competition development results must stay separate. Verify current competition checkpoint/data/rules before integration rather than relying on historical task counts.
+
+## Related methodology
+
+RepoGraph and GREPO are required structural comparisons/prior art; CS-RAG is relevant to structural sufficiency and fallback. GRPO from DeepSeekMath is a possible later training strategy, not an implemented method. Start with strong non-RL baselines and demonstrate a gate benefit before adding training complexity.
+
+## Publication status
+
+The v0.2 writeup reports measured audit outcomes and clearly marks proposed work. It is below the supplied 3,000-word limit. GitHub publication and a saved Markdown draft do not constitute a Kaggle submission. The previously supplied deadline is November 12, 2026, 23:59 UTC (November 13, 2026, 05:29 IST); verify it on Kaggle before submitting.
